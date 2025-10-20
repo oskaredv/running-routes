@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Listigaste Löprundor</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Leaflet CSS file -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <style>
+        #map { height: 60vh; }
+        #inputfields { padding: 10px; }
+        #elevationChart { height: 25vh; }
+    </style>
+</head>
+<body>
+    <!-- Input fields -->
+    <div id="inputfields">
+        <label>Desired route length (m): </label>
+        <input type="number" id="lengthInput" value="1000">
+        <label>Elevation: </label>
+        <select name="elevation" id="elevation">
+            <option value="nopref">No preference</option>
+            <option value="hilly">Hilly</option>
+            <option value="flat">Flat</option>
+        </select>
+        <label>Surface: </label>
+        <select name="surface" id="surface">
+            <option value="nopref">No preference</option>
+            <option value="road">Road</option>
+            <option value="trail">Trail</option>
+        </select>
+        <label>Nature: </label>
+        <select name="nature" id="nature">
+            <option value="nopref">No preference</option>
+            <option value="yes">Yes</option>
+        </select>
+        <label>Lighting: </label>
+        <select name="lighting" id="lighting">
+            <option value="nopref">No preference</option>
+            <option value="yes">Yes</option>
+        </select>
+        <label>POI: </label>
+        <select name="poi" id="poi">
+            <option value="nopref">No preference</option>
+            <option value="tourism">Tourism</option>
+            <option value="viewpoint">Viewpoint</option>
+        </select>
+        <button id="generateBtn">Generate route</button>
+    </div>
+
+    <!-- The map -->
+    <div id="map"></div>
+    <div id="stats">
+        <p id="length" style="display: none;"></p>
+        <p id="elevationStat" style="display: none;"></p>
+    </div>
+    <div id="elevationChart">
+        <canvas id="elevationChartCanvas"></canvas>
+    </div>
+    <!-- For Leaflet map -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- For Chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize map
+        var map = L.map("map").setView([59.444, 17.829], 13);
+
+        // Add OSM tile layer
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Store coordinates of clicked marker
+        var clickedCoords = null;
+        var currentMarker = null;
+
+        var routePolyline = null;
+        var startCircle = null;
+        var currentChart = null
+
+        // Add marker to map when clicking
+        map.on("click", function(e) {
+            clickedCoords = [e.latlng.lat, e.latlng.lng];
+            console.log("Clicked:", clickedCoords);
+
+            // Remove previous marker
+            if (currentMarker) {
+                map.removeLayer(currentMarker);
+            }
+
+            // Add new marker
+            currentMarker = L.marker(e.latlng)
+            .addTo(map)
+            .bindPopup("Start point")
+            .openPopup();
+        });
+        
+        // Send coordinates to backend when button clicked
+        document.getElementById("generateBtn").addEventListener("click", function() {
+            if (!clickedCoords) {
+                alert("You need to select a start point first by clicking on the map");
+                return;
+            }
+
+            var routeLengthInput = document.getElementById("lengthInput").value;
+            var routeLength = parseFloat(routeLengthInput);
+
+            var elevation = document.getElementById("elevation").value;
+            var surface = document.getElementById("surface").value;
+            var nature = document.getElementById("nature").value;
+            var lighting = document.getElementById("lighting").value;
+            var poi = document.getElementById("poi").value;
+
+            if (isNaN(routeLength) || routeLength <= 0) {
+                alert("You need to enter a positive route length");
+                return;
+            }
+
+            fetch("/route", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    coords: clickedCoords,
+                    distance: routeLength,
+                    elevation: elevation,
+                    surface: surface,
+                    nature: nature,
+                    poi: poi,
+                 })
+            })
+            .then(res => res.json())
+            .then(data => {
+            if (data.error) {
+                alert("Error: " + data.error);
+                return;
+            }
+
+            const length = document.getElementById("length");
+            length.style.display = "block";
+            length.innerText = "Route length (m): " + Math.round(data.length);
+
+            const elevationStat = document.getElementById("elevationStat");
+            elevationStat.style.display = "block";
+            elevationStat.innerText = "Elevation (m): " + data.elevation;
+
+            // Remove previous route if exists
+            if (routePolyline) map.removeLayer(routePolyline);
+
+            // Draw new route
+            routePolyline = L.polyline(data.route, {color: "green", weight: 4}).addTo(map);
+
+            if (startCircle) map.removeLayer(startCircle);
+
+            startCircle = L.circleMarker(data.route[0], { radius: 6, color: "green", fillColor: "green", fillOpacity: 1 }).addTo(map);
+
+            // Fit map to route bounds
+            map.fitBounds(routePolyline.getBounds());
+
+            const lengths = data.elevationOfRoute.map(segment => segment.length);
+            const elevations = data.elevationOfRoute.map(segment => segment.elevation);
+            
+            if (currentChart) {
+                currentChart.destroy();
+            }
+
+            const ctx = document.getElementById('elevationChartCanvas').getContext('2d');
+            currentChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: lengths,  // x-axis values
+                datasets: [{
+                label: 'Elevation Profile',
+                data: elevations, // y-axis values
+                borderColor: 'blue',
+                backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                tension: 0.3, // curve the line a bit
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                x: {
+                    type: "linear",
+                    title: {
+                    display: true,
+                    text: 'Length of route (m)',
+                    }
+                },
+                y: {
+                    type: "linear",
+                    title: {
+                    display: true,
+                    text: 'Elevation (m)',
+                    }
+                }
+                }
+            }
+            });
+
+            })
+            .catch(err => console.error(err));
+        });        
+    </script>
+</body>
+</html>
