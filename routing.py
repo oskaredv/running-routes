@@ -1,5 +1,6 @@
 import osmnx as ox
 import networkx as nx
+from networkx.exception import NetworkXNoPath
 from collections import defaultdict
 import random
 import math
@@ -69,7 +70,6 @@ def get_length_of_route(route_gdf):
     return route_gdf["length"].sum()
 
 def heuristic(G, start_vertex, route_length, pref):
-
     possible_via_vertices = find_random_pairs_of_via_vertices(G, start_vertex, route_length)
     best_route = [start_vertex]
     best_route_dev = math.inf
@@ -77,12 +77,14 @@ def heuristic(G, start_vertex, route_length, pref):
     for i, pair_of_via_vertices in enumerate(possible_via_vertices):
         route = generate_heuristic_route(G, start_vertex, pair_of_via_vertices[0], pair_of_via_vertices[1], pref)
         #weight = weight_of_route(ox.routing.route_to_gdf(G, route, weight="weight_heuristic"))
-        length = get_length_of_route(ox.routing.route_to_gdf(G, route, weight="length"))
+        if len(route) <= 1:
+            length = 0
+        else:
+            length = get_length_of_route(ox.routing.route_to_gdf(G, route, weight="length"))
         dev = abs(length - route_length)
         if dev < best_route_dev:
             best_route = route
             best_route_dev = dev
-    
     return best_route
     
 def greedy(G, start, k):
