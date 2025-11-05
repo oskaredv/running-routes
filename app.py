@@ -12,6 +12,27 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+def read_preferences(elevation, surface, nature, lighting, poi):
+    pref = [0,0,0,0,0,0,0,0]
+    if elevation == "hilly":
+        pref[0] = 1
+    if elevation == "flat":
+        pref[1] = 1
+    if surface == "road":
+        pref[2] = 1
+    if surface == "trail":
+        pref[3] = 1
+    if nature == "yes":
+        pref[4] = 1
+    if lighting == "yes":
+        pref[5] = 1
+    if poi == "tourism":
+        pref[6] = 1
+    if poi == "viewpoint":
+        pref[7] = 1
+
+    return pref
+
 @app.route('/route', methods=['POST'])
 def generate_route():
     data = request.json
@@ -24,11 +45,12 @@ def generate_route():
     poi = data.get("poi")
     print(f"Received start coords: {lat, long}, distance: {distance}, elevation: {elevation}")
 
-    nopref = [0,0,0,0,0,0,0,0]
-    pref = [1,1,1,1,1,1,1,1]
+    pref = read_preferences(elevation, surface, nature, lighting, poi)
+    #nopref = [0,0,0,0,0,0,0,0]
+    allpref = [1,1,1,1,1,1,1,1]
 
     try:
-        G = prepare_graph(lat, long, distance, nopref, pref)
+        G = prepare_graph(lat, long, distance, pref, allpref)
         start_vertex = ox.nearest_nodes(G, long, lat)
     except Exception as e:
         traceback.print_exc()
