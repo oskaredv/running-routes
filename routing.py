@@ -69,6 +69,7 @@ def generate_heuristic_route(G, start, viavertex1, viavertex2, pref):
 def get_length_of_route(route_gdf):
     return route_gdf["length"].sum()
 
+
 def heuristic(G, start_vertex, route_length, pref):
     possible_via_vertices = find_random_pairs_of_via_vertices(G, start_vertex, route_length)
     best_route = [start_vertex]

@@ -46,7 +46,6 @@ def generate_route():
     print(f"Received start coords: {lat, long}, distance: {distance}, elevation: {elevation}")
 
     pref = read_preferences(elevation, surface, nature, lighting, poi)
-    #nopref = [0,0,0,0,0,0,0,0]
     allpref = [1,1,1,1,1,1,1,1]
 
     try:
