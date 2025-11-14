@@ -7,6 +7,9 @@
 
     <!-- Leaflet CSS file -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <!-- Leaflet CSS file locate -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
+    <!-- CSS file for this project -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
@@ -60,6 +63,10 @@
     </div>
     <!-- For Leaflet map -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- For Leaflet location -->
+    <script src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
+
     <!-- For Chart -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -69,6 +76,16 @@
         // Add OSM tile layer
         L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Locate user
+        L.control.locate({
+            position: 'topright',
+            setView: 'once',
+            flyTo: true,
+            keepCurrentZoomLevel: false,
+            enableHighAccuracy: true,
+            initialZoomLevel: 16
         }).addTo(map);
 
         // Store coordinates of clicked marker
