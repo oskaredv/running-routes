@@ -1,26 +1,39 @@
-import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, useMapEvents, Marker, Popup } from "react-leaflet";
 
 function ClickHandler({ setStartCoords }) {
   useMapEvents({
     click(e) {
-      setStartCoords([e.latlng.lat, e.latlng.lng]); // 👈 skickar upp till App
+      setStartCoords([e.latlng.lat, e.latlng.lng]);
     },
   });
   return null;
 }
 
-export default function Map({ setStartCoords }) {
+function StartMarker({ startCoords}) {
+    if (!startCoords) return null;
+
+    return (
+        <Marker position={startCoords}>
+            <Popup>
+                Start point
+            </Popup>
+        </Marker>
+    );
+}
+
+export default function Map({ startCoords, setStartCoords }) {
     return (
         <MapContainer
           center={[59.444, 17.829]}
           zoom={13}
           style={{ height: "100%", width: "100%" }}
         >
-          <TileLayer
-            url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; OpenStreetMap contributors'
-          />
-          <ClickHandler setStartCoords={setStartCoords} />
+            <TileLayer
+                url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+            <ClickHandler setStartCoords={setStartCoords} />
+            <StartMarker startCoords={startCoords} />
         </MapContainer>
     );
 }

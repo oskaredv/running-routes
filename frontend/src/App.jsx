@@ -23,7 +23,7 @@ export default function App() {
         />
       </div>
       <div style={{ height: "95vh", width: "100vw" }}>
-        <Map setStartCoords={setStartCoords} />
+        <Map startCoords={startCoords} setStartCoords={setStartCoords} />
       </div>
     </>
   );
