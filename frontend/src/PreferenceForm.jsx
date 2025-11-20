@@ -10,7 +10,8 @@ export default function PreferencesForm({
   lighting,
   setLighting,
   poi,
-  setPoi
+  setPoi,
+  handleGenerateRoute
 }) {
   return (
     <div className="panel">
@@ -80,6 +81,9 @@ export default function PreferencesForm({
             <option value="viewpoint">Viewpoint</option>
         </select>
       </label>
+        <button onClick={handleGenerateRoute}>
+          Generate Route
+        </button>
     </div>
   );
 }

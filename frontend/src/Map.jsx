@@ -1,4 +1,5 @@
 import { MapContainer, TileLayer, useMapEvents, Marker, Popup } from "react-leaflet";
+import RouteLayer from './RouteLayer.jsx'
 
 function ClickHandler({ setStartCoords }) {
   useMapEvents({
@@ -21,7 +22,7 @@ function StartMarker({ startCoords}) {
     );
 }
 
-export default function Map({ startCoords, setStartCoords }) {
+export default function Map({ startCoords, setStartCoords, routeCoords }) {
     return (
         <MapContainer
           center={[59.444, 17.829]}
@@ -34,6 +35,7 @@ export default function Map({ startCoords, setStartCoords }) {
             />
             <ClickHandler setStartCoords={setStartCoords} />
             <StartMarker startCoords={startCoords} />
+            <RouteLayer routeCoords={routeCoords} />
         </MapContainer>
     );
 }

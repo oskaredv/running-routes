@@ -6,20 +6,18 @@ export default function App() {
 
   const [startCoords, setStartCoords] = useState(null);
   const [distance, setDistance] = useState(5000);
-  const [elevation, setElevation] = useState("any");
-  const [surface, setSurface] = useState("any");
-  const [nature, setNature] = useState("any");
-  const [lighting, setLighting] = useState("any");
-  const [poi, setPoi] = useState("any");
+  const [elevation, setElevation] = useState("nopref");
+  const [surface, setSurface] = useState("nopref");
+  const [nature, setNature] = useState("nopref");
+  const [lighting, setLighting] = useState("nopref");
+  const [poi, setPoi] = useState("nopref");
+  const [routeCoords, setRouteCoords] = useState(null);
 
   async function handleGenerateRoute() {
   if (!startCoords) {
     alert("Select a start point on the map first");
     return;
   }
-
-  setLoading(true);
-  setError("");
 
   try {
     const res = await fetch("http://localhost:5000/route", {
@@ -44,12 +42,8 @@ export default function App() {
       throw new Error(data.error || "Unknown error from backend");
     }
 
-    // print result som test
-    alert(route)
-    //setRouteCoords(data.route);
-    //setLengthStat(Math.round(data.length));
-    //setElevationStat(data.elevation);
-    //setElevationProfile(data.elevationOfRoute || []);
+    setRouteCoords(data.route);
+ 
   } catch (err) {
     console.error(err);
     setError(err.message);
@@ -75,10 +69,11 @@ export default function App() {
           setLighting={setLighting}
           poi={poi}
           setPoi={setPoi}
+          handleGenerateRoute={handleGenerateRoute}
         />
       </div>
       <div style={{ height: "95vh", width: "100vw" }}>
-        <Map startCoords={startCoords} setStartCoords={setStartCoords} />
+        <Map startCoords={startCoords} setStartCoords={setStartCoords} routeCoords={routeCoords}  />
       </div>
     </>
   );
