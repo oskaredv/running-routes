@@ -4,7 +4,13 @@ export default function PreferencesForm({
   elevation,
   setElevation,
   surface,
-  setSurface
+  setSurface,
+  nature,
+  setNature,
+  lighting,
+  setLighting,
+  poi,
+  setPoi
 }) {
   return (
     <div className="panel">
@@ -23,9 +29,9 @@ export default function PreferencesForm({
           value={elevation}
           onChange={(e) => setElevation(e.target.value)}
         >
-          <option value="any">Any</option>
-          <option value="flat">Flat</option>
-          <option value="hilly">Hilly</option>
+            <option value="nopref">No preference</option>
+            <option value="hilly">Hilly</option>
+            <option value="flat">Flat</option>
         </select>
       </label>
 
@@ -35,9 +41,43 @@ export default function PreferencesForm({
           value={surface}
           onChange={(e) => setSurface(e.target.value)}
         >
-          <option value="any">Any</option>
-          <option value="road">Road</option>
-          <option value="trail">Trail</option>
+            <option value="nopref">No preference</option>
+            <option value="road">Road</option>
+            <option value="trail">Trail</option>
+        </select>
+      </label>
+
+      <label>
+        Nature:
+        <select
+          value={nature}
+          onChange={(e) => setNature(e.target.value)}
+        >
+            <option value="nopref">No preference</option>
+            <option value="yes">Yes</option>
+        </select>
+      </label>
+
+      <label>
+        Lighting:
+        <select
+          value={lighting}
+          onChange={(e) => setLighting(e.target.value)}
+        >
+            <option value="nopref">No preference</option>
+            <option value="yes">Yes</option>
+        </select>
+      </label>
+    
+      <label>
+        POI:
+        <select
+          value={poi}
+          onChange={(e) => setPoi(e.target.value)}
+        >
+            <option value="nopref">No preference</option>
+            <option value="tourism">Tourism</option>
+            <option value="viewpoint">Viewpoint</option>
         </select>
       </label>
     </div>

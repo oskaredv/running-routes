@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 import traceback
 import osmnx as ox
 import networkx as nx
@@ -7,6 +8,7 @@ from routing import heuristic, greedy
 from postprocess import get_route_coordinates, get_stats_of_route, get_elevation_of_route
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def index():
