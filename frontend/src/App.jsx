@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Map from './Map.jsx'
 import Preferenceform from './PreferenceForm.jsx'
+import Loading from './Loading.jsx'
 
 export default function App() {
 
@@ -13,49 +14,54 @@ export default function App() {
   const [poi, setPoi] = useState("nopref");
   const [routeCoords, setRouteCoords] = useState(null);
 
+  const [loading, setLoading] = useState(false);
+
   async function handleGenerateRoute() {
-  if (!startCoords) {
-    alert("Select a start point on the map first");
-    return;
-  }
-
-  try {
-    const res = await fetch("http://localhost:5000/route", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        coords: startCoords,
-        distance: distance,
-        elevation: elevation,
-        surface: surface,
-        nature: nature,
-        lighting: lighting,
-        poi: poi,
-      }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok || data.error) {
-      throw new Error(data.error || "Unknown error from backend");
+    if (!startCoords) {
+      alert("Select a start point on the map first");
+      return;
     }
 
-    setRouteCoords(data.route);
- 
-  } catch (err) {
-    console.error(err);
-    setError(err.message);
-  } finally {
-    setLoading(false);
+    setLoading(true)
+
+    try {
+      const res = await fetch("http://localhost:5000/route", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          coords: startCoords,
+          distance: distance,
+          elevation: elevation,
+          surface: surface,
+          nature: nature,
+          lighting: lighting,
+          poi: poi,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || data.error) {
+        throw new Error(data.error || "Unknown error from backend");
+      }
+
+      setRouteCoords(data.route);
+
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   }
-}
 
 
   return (
     <>
-    <div style={{ height: "5vh", width: "100vw" }}>
+      {loading && < Loading />}
+      <div style={{ height: "5vh", width: "100vw" }}>
         <Preferenceform
           distance={distance}
           setDistance={setDistance}
@@ -73,7 +79,7 @@ export default function App() {
         />
       </div>
       <div style={{ height: "95vh", width: "100vw" }}>
-        <Map startCoords={startCoords} setStartCoords={setStartCoords} routeCoords={routeCoords}  />
+        <Map startCoords={startCoords} setStartCoords={setStartCoords} routeCoords={routeCoords} />
       </div>
     </>
   );
