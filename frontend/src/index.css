@@ -94,3 +94,15 @@ button:focus-visible {
     transform: rotate(360deg);
   }
 }
+
+.concise-stats {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 12px 18px;
+  border-radius: 10px;
+  backdrop-filter: blur(3px);
+}

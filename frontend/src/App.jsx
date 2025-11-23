@@ -2,9 +2,11 @@ import { useState } from "react";
 import Map from './Map.jsx'
 import Preferenceform from './PreferenceForm.jsx'
 import Loading from './Loading.jsx'
+import Statistics from "./Statistics.jsx";
 
 export default function App() {
 
+  // Input to route generator
   const [startCoords, setStartCoords] = useState(null);
   const [distance, setDistance] = useState(5000);
   const [elevation, setElevation] = useState("nopref");
@@ -12,7 +14,10 @@ export default function App() {
   const [nature, setNature] = useState("nopref");
   const [lighting, setLighting] = useState("nopref");
   const [poi, setPoi] = useState("nopref");
+
+  // Output from route generator
   const [routeCoords, setRouteCoords] = useState(null);
+  const [routeLength, setRouteLength] = useState(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -32,7 +37,7 @@ export default function App() {
         },
         body: JSON.stringify({
           coords: startCoords,
-          distance: distance,
+          distance: Number(distance),
           elevation: elevation,
           surface: surface,
           nature: nature,
@@ -48,6 +53,7 @@ export default function App() {
       }
 
       setRouteCoords(data.route);
+      setRouteLength(data.length)
 
     } catch (err) {
       console.error(err);
@@ -78,8 +84,9 @@ export default function App() {
           handleGenerateRoute={handleGenerateRoute}
         />
       </div>
-      <div style={{ height: "95vh", width: "100vw" }}>
+      <div style={{ position: "relative", height: "95vh", width: "100vw" }}>
         <Map startCoords={startCoords} setStartCoords={setStartCoords} routeCoords={routeCoords} />
+        {routeLength && < Statistics routeLength={routeLength} />}
       </div>
     </>
   );
