@@ -18,6 +18,7 @@ export default function App() {
   // Output from route generator
   const [routeCoords, setRouteCoords] = useState(null);
   const [routeLength, setRouteLength] = useState(null);
+  const [routeElevation, setRouteElevation] = useState(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -54,6 +55,7 @@ export default function App() {
 
       setRouteCoords(data.route);
       setRouteLength(data.length)
+      setRouteElevation(data.elevation)
 
     } catch (err) {
       console.error(err);
@@ -86,7 +88,7 @@ export default function App() {
       </div>
       <div style={{ position: "relative", height: "95vh", width: "100vw" }}>
         <Map startCoords={startCoords} setStartCoords={setStartCoords} routeCoords={routeCoords} />
-        {routeLength && < Statistics routeLength={routeLength} />}
+        {routeLength && < Statistics routeLength={routeLength} routeElevation={routeElevation} />}
       </div>
     </>
   );

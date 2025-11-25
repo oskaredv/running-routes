@@ -1,3 +1,25 @@
+import { useState } from "react";
+
+
+function InputSlider({ value, setValue}) {
+
+  return (
+    <>
+      <label>
+        Värde: {value}
+        <input
+          type="range"
+          min="0"
+          max="10000"
+          step="1"
+          value={value}
+          onChange={(e) => setValue(Number(e.target.value))}
+        />
+      </label>
+    </>
+  );
+} 
+
 export default function PreferencesForm({
   distance,
   setDistance,
@@ -13,16 +35,13 @@ export default function PreferencesForm({
   setPoi,
   handleGenerateRoute
 }) {
+
+  const [showPreferences, setShowPreferences] = useState(false);
+
   return (
     <div className="panel">
-      <label>
-        Distance:
-        <input
-          type="number"
-          value={distance}
-          onChange={(e) => setDistance(e.target.value)}
-        />
-      </label>
+
+      <InputSlider value={distance} setValue={setDistance}/>
 
       <label>
         Elevation:

@@ -1,23 +1,27 @@
  import { useState } from "react";
  
- export default function Statistics({ routeLength }) {
+ function DetailedStats({ routeLength, routeElevation, showDetailedStats, setShowDetailedStats }) {
+    return (
+                <div className="detailed-stats">
+                    <p style={{ textAlign: "center", color: "black", fontSize: "20px" }}>
+                        Length: {routeLength}m
+                    </p>
+                    <p style={{ textAlign: "center", color: "black", fontSize: "20px" }}>
+                        Elevation: {routeElevation}m
+                    </p>
+                    <button className="close-btn" onClick={() => setShowDetailedStats(false)}>×</button>
+                </div>
+    );    
+ }
+ 
+ export default function Statistics({ routeLength, routeElevation }) {
 
-    const [detailedStats, setDetailedStats] = useState(false);
+    const [showDetailedStats, setShowDetailedStats] = useState(false);
 
     routeLength = Math.round(routeLength);
 
-    if (detailedStats) {
-        return (
-                <div className="concise-stats">
-                    <p style={{ textAlign: "center", color: "black", fontSize: "20px" }}>
-                        {routeLength}m
-                    </p>
-                    <p> {String(detailedStats)}</p>
-                    <button onClick={() => setDetailedStats(false)} >
-                        Close statistics {detailedStats}
-                    </button>
-                </div>
-        );
+    if (showDetailedStats) {
+        return (<DetailedStats routeLength={routeLength} routeElevation={routeElevation} showDetailedStats={showDetailedStats} setShowDetailedStats={setShowDetailedStats}/>);
     }
     else {
         return (
@@ -25,9 +29,8 @@
                     <p style={{ textAlign: "center", color: "black", fontSize: "20px" }}>
                         {routeLength}m
                     </p>
-                    <p> {String(detailedStats)}</p>
-                    <button onClick={() => setDetailedStats(true)} >
-                        See more statistics {detailedStats}
+                    <button onClick={() => setShowDetailedStats(true)} >
+                        See more statistics {showDetailedStats}
                     </button>
                 </div>
         );

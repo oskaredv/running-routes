@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, useMapEvents, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, useMapEvents, Marker, Popup, ZoomControl } from "react-leaflet";
 import RouteLayer from './RouteLayer.jsx'
 
 function ClickHandler({ setStartCoords }) {
@@ -27,12 +27,14 @@ export default function Map({ startCoords, setStartCoords, routeCoords }) {
         <MapContainer
           center={[59.444, 17.829]}
           zoom={13}
+          zoomControl={false}
           style={{ height: "100%", width: "100%" }}
         >
             <TileLayer
                 url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
+            <ZoomControl position="topright" />
             <ClickHandler setStartCoords={setStartCoords} />
             <StartMarker startCoords={startCoords} />
             <RouteLayer routeCoords={routeCoords} />
