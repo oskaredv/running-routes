@@ -1,17 +1,16 @@
 import { useState } from "react";
 
 
-function InputSlider({ value, setValue}) {
+function InputSlider({ value, setValue, min, max, step }) {
 
   return (
     <>
       <label>
-        Värde: {value}
         <input
           type="range"
-          min="0"
-          max="10000"
-          step="1"
+          min={min}
+          max={max}
+          step={step}
           value={value}
           onChange={(e) => setValue(Number(e.target.value))}
         />
@@ -40,8 +39,12 @@ export default function PreferencesForm({
 
   return (
     <div className="panel">
-
-      <InputSlider value={distance} setValue={setDistance}/>
+      <label>
+        Test 1
+        <InputSlider value={distance} setValue={setDistance} min={0} max={10000} step={1}/>
+        Test 2
+      </label>
+      
 
       <label>
         Elevation:

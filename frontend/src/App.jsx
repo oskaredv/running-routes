@@ -69,7 +69,7 @@ export default function App() {
   return (
     <>
       {loading && < Loading />}
-      <div style={{ height: "5vh", width: "100vw" }}>
+      <div>
         <Preferenceform
           distance={distance}
           setDistance={setDistance}

@@ -1,0 +1,170 @@
+@keyframes runner {
+    0%, 50%, 100%   {transform: translateY(0vh) rotate(7deg);}
+    15%, 65%        {transform: translateY(-1vh) rotate(5deg);}
+}
+
+@keyframes head {
+    0%, 100% {transform: rotate(-5deg);}
+    25%, 75% {transform: rotate(15deg);}
+    50%      {transform: rotate(0deg);}
+}
+
+@keyframes arm {
+    0%, 100%    {transform: rotate(50deg);}
+    50%         {transform: rotate(-70deg);}
+}
+
+@keyframes underarm {
+    0%, 100%    {transform: rotate(-5deg);}
+    50%         {transform: rotate(-100deg);}
+}
+
+@keyframes leg {
+    0%, 100% {transform: rotate(55deg);}
+    40%      {transform: rotate(-60deg);}
+}
+
+@keyframes lowerleg {
+    0%, 100%    {transform: rotate(80deg);}
+    50%    {transform: rotate(0deg);}
+}
+
+@keyframes shadow {
+    0%, 50%, 100%   {transform: scale(1.5);}
+    25%, 75%        {transform: scale(0.98);}
+}
+
+.runner {
+    position: relative;
+    height: 10vh;
+    width: 2.5vh;
+    margin: 0 auto;
+    animation-name: runner;
+    animation-duration: 0.8s;
+    animation-iteration-count: infinite;
+    z-index: 19999;
+}
+
+.head {
+    position: absolute;
+    top: 0%;
+    left: 30%;
+    width: 60%;
+    height: 15%;
+    margin: 0 auto;
+    background: #1bda11;
+    animation-name: head;
+    animation-duration: 0.8s;
+    animation-iteration-count: infinite;
+    border-radius: 50%;
+    transform-origin: 50% 0;            
+}
+
+.torso {
+    position: absolute;
+    top: 12%;
+    left: 35%;
+    width: 30%;
+    height: 40%;
+    background: #1bda11;
+    border-radius: 10px;
+    z-index: 1;
+}
+
+.arm div {
+    top: 18%;
+    left: 25%;
+    position: absolute;
+    width: 25%;
+    height: 15%;
+    transform-origin: 50% 0;  
+    animation-name: arm;
+    animation-duration: 0.8s;
+    animation-iteration-count: infinite;
+}
+
+.arm div div {
+    position: absolute;
+    width: 90%;
+    height: 100%;
+    top: 90%;
+    animation-name: underarm;
+    animation-duration: 0.8s;
+    animation-iteration-count: infinite;
+    transform-origin: 50% 0;
+}
+
+.leg div {
+    top: 50%;
+    left: 27%;
+    position: absolute;
+    width: 27%;
+    height: 22%;
+    transform-origin: 50% 0; 
+    animation-name: leg;
+    animation-duration: 0.8s;
+    animation-iteration-count: infinite;
+}
+
+.leg div div {
+    position: absolute;
+    width: 90%;
+    height: 100%;
+    top: 90%;
+    animation-name: lowerleg;
+    animation-duration: 0.8s;
+    animation-iteration-count: infinite;
+    transform-origin: 50% 0%; 
+}
+
+.left div {
+    left: 50%;
+    background: #074904;
+}
+
+.left div div {
+    background: #074904;
+}
+
+.leg.left div,
+.arm.right div {
+    animation-delay: -0.4s;
+    z-index: 0;
+}
+
+.right div div {
+    background: #1bda11;
+}
+
+.right div {
+    background: #1bda11;
+}
+
+.shadow{
+    position:relative;
+    width:3.5vh; height:0.5vh;
+    margin:0 0;
+    border-radius:50%;
+    background:#05314f;
+    animation-name: shadow;
+    animation-duration: 0.8s;
+    animation-iteration-count: infinite;
+    z-index:1;
+}
+
+.runner,
+.head,
+.arm div,
+.arm div div,
+.leg div,
+.leg div div,
+.shadow {
+    animation-timing-function: ease-in-out;
+}
+
+.arm div,
+.arm div div,
+.leg div,
+.leg div div {
+    border-radius: 999px;
+}
