@@ -34,9 +34,7 @@ export default function PreferencesForm({
   setPoi,
   handleGenerateRoute
 }) {
-
-  const [showPreferences, setShowPreferences] = useState(false);
-
+  
   return (
     <div className="panel">
       <label>

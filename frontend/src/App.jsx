@@ -21,6 +21,7 @@ export default function App() {
   const [routeElevation, setRouteElevation] = useState(null);
 
   const [loading, setLoading] = useState(false);
+  const [showPreferences, setShowPreferences] = useState(false);
 
   async function handleGenerateRoute() {
     if (!startCoords) {
@@ -69,7 +70,8 @@ export default function App() {
   return (
     <>
       {loading && < Loading />}
-      <div>
+      <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
+        { showPreferences &&
         <Preferenceform
           distance={distance}
           setDistance={setDistance}
@@ -85,8 +87,12 @@ export default function App() {
           setPoi={setPoi}
           handleGenerateRoute={handleGenerateRoute}
         />
-      </div>
-      <div style={{ position: "relative", height: "95vh", width: "100vw" }}>
+        }
+        <button
+          className="prefs-btn"
+          onClick={() => setShowPreferences(true)}>
+          ⚙️
+        </button>
         <Map startCoords={startCoords} setStartCoords={setStartCoords} routeCoords={routeCoords} />
         {routeLength && < Statistics routeLength={routeLength} routeElevation={routeElevation} />}
       </div>
